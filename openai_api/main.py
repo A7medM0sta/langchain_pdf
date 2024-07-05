@@ -7,14 +7,25 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 from langchain.callbacks import get_openai_callback
+import openai
+from retrying import retry
 
-# another API Key from OpenAI
-# sk-proj-aBG1iigaYTAe10WErKKnT3BlbkFJi3fzH7nvI3hg1WviUl1h
+def _create_retry_decorator(embeddings):
+    def retry_if_openai_timeout_exception(exception):
+        """Return True if we should retry (in this case when it's an openai.Timeout exception), False otherwise"""
+        return isinstance(exception, openai.OpenAIError) and 'timeout' in str(exception).lower()
+
+    retry_decorator = retry(
+        retry_on_exception=retry_if_openai_timeout_exception,
+        stop_max_attempt_number=3,
+        wait_fixed=2000
+    )
+    return retry_decorator
 
 def main():
     load_dotenv()
     st.set_page_config(page_title="Ask your PDF")
-    st.header("Ask your PDF 💬")
+    st.header("Ask your PDF 🥷")
 
     # upload file
     pdf = st.file_uploader("Upload your PDF", type="pdf")

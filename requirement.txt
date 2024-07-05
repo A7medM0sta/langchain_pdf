@@ -4,4 +4,10 @@ python-dotenv==1.0.0
 streamlit==1.18.1
 faiss-cpu==1.7.4
 altair<5
+openai==0.27.4
 
+# Example
+
+
+# Example
+python make_embedd.py --pdf_path "https://arxiv.org/pdf/2005.14165.pdf" --OPEN_API_KEY "sk-proj-jJ1p3clkey0XTZS9RNseT3BlbkFJu0ZWlLl3pTz0XhI8LD1X"
